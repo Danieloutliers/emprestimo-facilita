@@ -22,9 +22,9 @@ const LoanCalculator = () => {
       return;
     }
 
-    // Fórmula de juros compostos com prestações mensais
-    const monthlyPayment = principal * (rate * Math.pow(1 + rate, time)) / (Math.pow(1 + rate, time) - 1);
-    const totalAmount = monthlyPayment * time;
+    // Cálculo de juros simples: Principal + (Principal * Taxa * Tempo)
+    const totalInterest = principal * rate * time;
+    const totalAmount = principal + totalInterest;
     setResult(totalAmount);
     toast.success('Cálculo realizado com sucesso!');
   };
