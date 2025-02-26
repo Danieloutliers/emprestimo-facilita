@@ -14,7 +14,7 @@ const LoanCalculator = () => {
 
   const calculateLoan = () => {
     const principal = parseFloat(amount);
-    const rate = parseFloat(interestRate) / 100; // Taxa já está em % mensal
+    const rate = parseFloat(interestRate) / 100;
     const time = parseFloat(months);
 
     if (!principal || !rate || !time) {
@@ -22,7 +22,8 @@ const LoanCalculator = () => {
       return;
     }
 
-    const monthlyPayment = (principal * rate * Math.pow(1 + rate, time)) / (Math.pow(1 + rate, time) - 1);
+    // Fórmula de juros compostos com prestações mensais
+    const monthlyPayment = principal * (rate * Math.pow(1 + rate, time)) / (Math.pow(1 + rate, time) - 1);
     const totalAmount = monthlyPayment * time;
     setResult(totalAmount);
     toast.success('Cálculo realizado com sucesso!');
