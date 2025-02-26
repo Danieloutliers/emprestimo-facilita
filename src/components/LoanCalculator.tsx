@@ -14,7 +14,7 @@ const LoanCalculator = () => {
 
   const calculateLoan = () => {
     const principal = parseFloat(amount);
-    const rate = parseFloat(interestRate) / 100 / 12;
+    const rate = parseFloat(interestRate) / 100; // Taxa já está em % mensal
     const time = parseFloat(months);
 
     if (!principal || !rate || !time) {
@@ -55,13 +55,13 @@ const LoanCalculator = () => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="interest">Taxa de Juros (% ao ano)</Label>
+        <Label htmlFor="interest">Taxa de Juros (% ao mês)</Label>
         <Input
           id="interest"
           type="number"
           value={interestRate}
           onChange={(e) => setInterestRate(e.target.value)}
-          placeholder="Ex: 12"
+          placeholder="Ex: 1.5"
           className="w-full"
         />
       </div>
