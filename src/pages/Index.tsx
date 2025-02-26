@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import LoanCalculator from '@/components/LoanCalculator';
 import LoanForm from '@/components/LoanForm';
 import LoanList from '@/components/LoanList';
+import LoginScreen from '@/components/LoginScreen';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LoanData } from '@/components/LoanForm';
 import { toast } from 'sonner';
 
 const Index = () => {
   const [loans, setLoans] = useState<LoanData[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLoanSubmit = (data: LoanData) => {
     setLoans([...loans, data]);
@@ -31,6 +33,10 @@ const Index = () => {
     document.body.removeChild(link);
     toast.success('Arquivo exportado com sucesso!');
   };
+
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50 p-6">
