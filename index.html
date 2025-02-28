@@ -24,247 +24,273 @@
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50 p-6">
-  <div class="max-w-6xl mx-auto space-y-8">
-    <div class="text-center space-y-2">
-      <h1 class="text-4xl font-bold text-gray-800">Sistema de Empréstimos</h1>
-      <p class="text-gray-600">Calcule, cadastre e gerencie empréstimos de forma simples</p>
+  <!-- Login Screen -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center fixed inset-0 bg-gradient-to-br from-gray-50 to-emerald-50 z-50">
+    <div class="p-6 space-y-4 max-w-md w-full bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+      <h1 class="text-2xl font-bold text-center text-gray-800">Login</h1>
+      <div class="space-y-2">
+        <label for="password" class="text-sm font-medium leading-none block">Senha</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="Digite sua senha"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+          onkeydown="if(event.key === 'Enter') { checkPassword(); }"
+        />
+      </div>
+      <button
+        onclick="checkPassword()"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+      >
+        Entrar
+      </button>
     </div>
+  </div>
 
-    <div class="w-full">
-      <!-- Tabs Navigation -->
-      <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
-        <div class="grid w-full grid-cols-3">
-          <button class="tab-trigger tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="calculator">Calculadora</button>
-          <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="register">Cadastrar</button>
-          <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="list">Listar</button>
-        </div>
+  <!-- Main Application -->
+  <div id="app-content" class="hidden">
+    <div class="max-w-6xl mx-auto space-y-8">
+      <div class="text-center space-y-2">
+        <h1 class="text-4xl font-bold text-gray-800">Sistema de Empréstimos</h1>
+        <p class="text-gray-600">Calcule, cadastre e gerencie empréstimos de forma simples</p>
       </div>
-      
-      <!-- Calculator Tab -->
-      <div id="calculator-tab" class="tab-content mt-6">
-        <div class="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
-          <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
-            <div class="grid w-full grid-cols-2">
-              <button class="calc-tab-trigger calc-tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="normal">Calcular Valor</button>
-              <button class="calc-tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="reverse">Calcular Prazo</button>
-            </div>
-          </div>
-          
-          <!-- Normal Calculation -->
-          <div id="normal-calc-tab" class="calc-tab-content space-y-4 mt-4">
-            <div class="space-y-2">
-              <label for="amount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
-              <input
-                id="amount"
-                type="number"
-                placeholder="Ex: 5000"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
 
-            <div class="space-y-2">
-              <label for="months" class="text-sm font-medium leading-none block">Período (meses)</label>
-              <input
-                id="months"
-                type="number"
-                placeholder="Ex: 12"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="interest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
-              <input
-                id="interest"
-                type="number"
-                placeholder="Ex: 1.5"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <button 
-              id="calculate-btn"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
-            >
-              Calcular
-            </button>
-
-            <div id="result-container" class="hidden space-y-2 result-box">
-              <p id="total-amount" class="text-emerald-800 font-medium"></p>
-              <p id="monthly-payment" class="text-emerald-600 text-sm"></p>
-              <p id="recovery-months" class="text-emerald-600 text-sm"></p>
-            </div>
-          </div>
-          
-          <!-- Reverse Calculation -->
-          <div id="reverse-calc-tab" class="calc-tab-content space-y-4 mt-4 hidden">
-            <div class="space-y-2">
-              <label for="loanAmount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
-              <input
-                id="loanAmount"
-                type="number"
-                placeholder="Ex: 5000"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="monthlyPayment" class="text-sm font-medium leading-none block">Valor da Parcela (R$)</label>
-              <input
-                id="monthlyPayment"
-                type="number"
-                placeholder="Ex: 500"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="loanInterest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
-              <input
-                id="loanInterest"
-                type="number"
-                placeholder="Ex: 1.5"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <button 
-              id="calculate-months-btn"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
-            >
-              Calcular Prazo
-            </button>
-
-            <div id="reverse-result-container" class="hidden space-y-2 result-box">
-              <p id="calculated-months" class="text-emerald-800 font-medium"></p>
-              <p id="total-value" class="text-emerald-600 text-sm"></p>
-              <p id="inverse-recovery-months" class="text-emerald-600 text-sm"></p>
-            </div>
+      <div class="w-full">
+        <!-- Tabs Navigation -->
+        <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
+          <div class="grid w-full grid-cols-3">
+            <button class="tab-trigger tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="calculator">Calculadora</button>
+            <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="register">Cadastrar</button>
+            <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="list">Listar</button>
           </div>
         </div>
-      </div>
-      
-      <!-- Register Tab -->
-      <div id="register-tab" class="tab-content mt-6 hidden">
-        <form id="loan-form">
+        
+        <!-- Calculator Tab -->
+        <div id="calculator-tab" class="tab-content mt-6">
           <div class="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
-            <div class="space-y-2">
-              <label for="name" class="text-sm font-medium leading-none block">Nome Completo</label>
-              <input
-                id="name"
-                name="name"
-                placeholder="Digite seu nome completo"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
+            <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
+              <div class="grid w-full grid-cols-2">
+                <button class="calc-tab-trigger calc-tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="normal">Calcular Valor</button>
+                <button class="calc-tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="reverse">Calcular Prazo</button>
+              </div>
             </div>
+            
+            <!-- Normal Calculation -->
+            <div id="normal-calc-tab" class="calc-tab-content space-y-4 mt-4">
+              <div class="space-y-2">
+                <label for="amount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
+                <input
+                  id="amount"
+                  type="number"
+                  placeholder="Ex: 5000"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
 
-            <div class="space-y-2">
-              <label for="cpf" class="text-sm font-medium leading-none block">CPF</label>
-              <input
-                id="cpf"
-                name="cpf"
-                placeholder="000.000.000-00"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
+              <div class="space-y-2">
+                <label for="months" class="text-sm font-medium leading-none block">Período (meses)</label>
+                <input
+                  id="months"
+                  type="number"
+                  placeholder="Ex: 12"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="interest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
+                <input
+                  id="interest"
+                  type="number"
+                  placeholder="Ex: 1.5"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <button 
+                id="calculate-btn"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+              >
+                Calcular
+              </button>
+
+              <div id="result-container" class="hidden space-y-2 result-box">
+                <p id="total-amount" class="text-emerald-800 font-medium"></p>
+                <p id="monthly-payment" class="text-emerald-600 text-sm"></p>
+                <p id="recovery-months" class="text-emerald-600 text-sm"></p>
+              </div>
             </div>
+            
+            <!-- Reverse Calculation -->
+            <div id="reverse-calc-tab" class="calc-tab-content space-y-4 mt-4 hidden">
+              <div class="space-y-2">
+                <label for="loanAmount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
+                <input
+                  id="loanAmount"
+                  type="number"
+                  placeholder="Ex: 5000"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
 
-            <div class="space-y-2">
-              <label for="email" class="text-sm font-medium leading-none block">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="seu@email.com"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
+              <div class="space-y-2">
+                <label for="monthlyPayment" class="text-sm font-medium leading-none block">Valor da Parcela (R$)</label>
+                <input
+                  id="monthlyPayment"
+                  type="number"
+                  placeholder="Ex: 500"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="loanInterest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
+                <input
+                  id="loanInterest"
+                  type="number"
+                  placeholder="Ex: 1.5"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <button 
+                id="calculate-months-btn"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+              >
+                Calcular Prazo
+              </button>
+
+              <div id="reverse-result-container" class="hidden space-y-2 result-box">
+                <p id="calculated-months" class="text-emerald-800 font-medium"></p>
+                <p id="total-value" class="text-emerald-600 text-sm"></p>
+                <p id="inverse-recovery-months" class="text-emerald-600 text-sm"></p>
+              </div>
             </div>
-
-            <div class="space-y-2">
-              <label for="phone" class="text-sm font-medium leading-none block">Telefone</label>
-              <input
-                id="phone"
-                name="phone"
-                placeholder="(00) 00000-0000"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="register-amount" class="text-sm font-medium leading-none block">Valor do Empréstimo</label>
-              <input
-                id="register-amount"
-                name="amount"
-                type="number"
-                placeholder="Digite o valor"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="register-months" class="text-sm font-medium leading-none block">Prazo (meses)</label>
-              <input
-                id="register-months"
-                name="months"
-                type="number"
-                placeholder="Digite o prazo"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <div class="space-y-2">
-              <label for="register-interest" class="text-sm font-medium leading-none block">Taxa de Juros (%)</label>
-              <input
-                id="register-interest"
-                name="interestRate"
-                type="number"
-                placeholder="Digite a taxa"
-                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-              />
-            </div>
-
-            <button 
-              type="submit"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
-            >
-              Cadastrar Empréstimo
-            </button>
           </div>
-        </form>
-      </div>
-      
-      <!-- List Tab -->
-      <div id="list-tab" class="tab-content mt-6 hidden">
-        <div class="p-4 overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">Empréstimos Cadastrados</h2>
-            <button
-              id="export-btn"
-              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 h-10 px-4 py-2 gap-2"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Exportar
-            </button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead>
-                <tr class="border-b">
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nome</th>
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">CPF</th>
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Valor</th>
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Prazo (meses)</th>
-                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Taxa de Juros</th>
-                </tr>
-              </thead>
-              <tbody id="loans-table-body">
-                <!-- Loan rows will be added here dynamically -->
-              </tbody>
-            </table>
+        </div>
+        
+        <!-- Register Tab -->
+        <div id="register-tab" class="tab-content mt-6 hidden">
+          <form id="loan-form">
+            <div class="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+              <div class="space-y-2">
+                <label for="name" class="text-sm font-medium leading-none block">Nome Completo</label>
+                <input
+                  id="name"
+                  name="name"
+                  placeholder="Digite seu nome completo"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="cpf" class="text-sm font-medium leading-none block">CPF</label>
+                <input
+                  id="cpf"
+                  name="cpf"
+                  placeholder="000.000.000-00"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="email" class="text-sm font-medium leading-none block">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="phone" class="text-sm font-medium leading-none block">Telefone</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  placeholder="(00) 00000-0000"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="register-amount" class="text-sm font-medium leading-none block">Valor do Empréstimo</label>
+                <input
+                  id="register-amount"
+                  name="amount"
+                  type="number"
+                  placeholder="Digite o valor"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="register-months" class="text-sm font-medium leading-none block">Prazo (meses)</label>
+                <input
+                  id="register-months"
+                  name="months"
+                  type="number"
+                  placeholder="Digite o prazo"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="register-interest" class="text-sm font-medium leading-none block">Taxa de Juros (%)</label>
+                <input
+                  id="register-interest"
+                  name="interestRate"
+                  type="number"
+                  placeholder="Digite a taxa"
+                  class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+              >
+                Cadastrar Empréstimo
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- List Tab -->
+        <div id="list-tab" class="tab-content mt-6 hidden">
+          <div class="p-4 overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-xl font-semibold text-gray-800">Empréstimos Cadastrados</h2>
+              <button
+                id="export-btn"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 h-10 px-4 py-2 gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Exportar
+              </button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b">
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nome</th>
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">CPF</th>
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Valor</th>
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Prazo (meses)</th>
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Taxa de Juros</th>
+                  </tr>
+                </thead>
+                <tbody id="loans-table-body">
+                  <!-- Loan rows will be added here dynamically -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -282,6 +308,18 @@
   </div>
 
   <script>
+    // Check password
+    function checkPassword() {
+      const password = document.getElementById('password').value;
+      if (password === '123') {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-content').classList.remove('hidden');
+        showToast('Login realizado com sucesso!');
+      } else {
+        showToast('Senha incorreta', false);
+      }
+    }
+
     // Store loans data
     let loans = [];
 
