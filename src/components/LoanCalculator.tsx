@@ -12,12 +12,14 @@ const LoanCalculator = () => {
   const [months, setMonths] = useState('');
   const [interestRate, setInterestRate] = useState('');
   const [result, setResult] = useState<number | null>(null);
+  const [recoveryMonths, setRecoveryMonths] = useState<number | null>(null);
   
   // Novos estados para o cálculo inverso
   const [loanAmount, setLoanAmount] = useState('');
   const [monthlyPayment, setMonthlyPayment] = useState('');
   const [loanInterestRate, setLoanInterestRate] = useState('');
   const [calculatedMonths, setCalculatedMonths] = useState<number | null>(null);
+  const [inverseRecoveryMonths, setInverseRecoveryMonths] = useState<number | null>(null);
 
   const calculateLoan = () => {
     const principal = parseFloat(amount);
@@ -32,7 +34,16 @@ const LoanCalculator = () => {
     // Cálculo de juros simples: Principal + (Principal * Taxa * Tempo)
     const totalInterest = principal * rate * time;
     const totalAmount = principal + totalInterest;
+    const monthlyPayment = totalAmount / time;
+    
+    // Cálculo de quando o principal será recuperado
+    // montante acumulado = parcela mensal * número de meses
+    // principal = parcela mensal * meses de recuperação
+    // meses de recuperação = principal / parcela mensal
+    const monthsToRecover = Math.ceil(principal / monthlyPayment);
+    
     setResult(totalAmount);
+    setRecoveryMonths(monthsToRecover > time ? time : monthsToRecover);
     toast.success('Cálculo realizado com sucesso!');
   };
 
@@ -62,7 +73,12 @@ const LoanCalculator = () => {
     
     // Arredonda para cima para garantir que todas as parcelas sejam pagas
     const roundedTime = Math.ceil(time);
+    
+    // Cálculo de quando o principal será recuperado
+    const monthsToRecover = Math.ceil(principal / payment);
+    
     setCalculatedMonths(roundedTime);
+    setInverseRecoveryMonths(monthsToRecover > roundedTime ? roundedTime : monthsToRecover);
     toast.success('Cálculo realizado com sucesso!');
   };
 
@@ -119,12 +135,15 @@ const LoanCalculator = () => {
           </Button>
 
           {result && (
-            <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
+            <div className="mt-4 p-4 bg-emerald-50 rounded-lg space-y-2">
               <p className="text-emerald-800 font-medium">
                 Valor Total: R$ {result.toFixed(2)}
               </p>
               <p className="text-emerald-600 text-sm">
                 Parcela Mensal: R$ {(result / parseFloat(months)).toFixed(2)}
+              </p>
+              <p className="text-emerald-600 text-sm">
+                Recuperação do Principal: {recoveryMonths} {recoveryMonths === 1 ? 'mês' : 'meses'}
               </p>
             </div>
           )}
@@ -175,12 +194,15 @@ const LoanCalculator = () => {
           </Button>
 
           {calculatedMonths !== null && (
-            <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
+            <div className="mt-4 p-4 bg-emerald-50 rounded-lg space-y-2">
               <p className="text-emerald-800 font-medium">
                 Prazo Necessário: {calculatedMonths} {calculatedMonths === 1 ? 'mês' : 'meses'}
               </p>
               <p className="text-emerald-600 text-sm">
                 Valor Total: R$ {(parseFloat(monthlyPayment) * calculatedMonths).toFixed(2)}
+              </p>
+              <p className="text-emerald-600 text-sm">
+                Recuperação do Principal: {inverseRecoveryMonths} {inverseRecoveryMonths === 1 ? 'mês' : 'meses'}
               </p>
             </div>
           )}
