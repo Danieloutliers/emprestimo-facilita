@@ -1,18 +1,482 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>emprestimo-facilita</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-    <meta property="og:image" content="/og-image.png" />
-  </head>
 
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Empréstimos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hidden {
+      display: none;
+    }
+    .tab-active {
+      background-color: white;
+      color: #1f2937;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .result-box {
+      background-color: #ecfdf5;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50 p-6">
+  <div class="max-w-6xl mx-auto space-y-8">
+    <div class="text-center space-y-2">
+      <h1 class="text-4xl font-bold text-gray-800">Sistema de Empréstimos</h1>
+      <p class="text-gray-600">Calcule, cadastre e gerencie empréstimos de forma simples</p>
+    </div>
+
+    <div class="w-full">
+      <!-- Tabs Navigation -->
+      <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
+        <div class="grid w-full grid-cols-3">
+          <button class="tab-trigger tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="calculator">Calculadora</button>
+          <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="register">Cadastrar</button>
+          <button class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-tab="list">Listar</button>
+        </div>
+      </div>
+      
+      <!-- Calculator Tab -->
+      <div id="calculator-tab" class="tab-content mt-6">
+        <div class="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+          <div class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500 w-full">
+            <div class="grid w-full grid-cols-2">
+              <button class="calc-tab-trigger calc-tab-active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="normal">Calcular Valor</button>
+              <button class="calc-tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium" data-calc-tab="reverse">Calcular Prazo</button>
+            </div>
+          </div>
+          
+          <!-- Normal Calculation -->
+          <div id="normal-calc-tab" class="calc-tab-content space-y-4 mt-4">
+            <div class="space-y-2">
+              <label for="amount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
+              <input
+                id="amount"
+                type="number"
+                placeholder="Ex: 5000"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="months" class="text-sm font-medium leading-none block">Período (meses)</label>
+              <input
+                id="months"
+                type="number"
+                placeholder="Ex: 12"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="interest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
+              <input
+                id="interest"
+                type="number"
+                placeholder="Ex: 1.5"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <button 
+              id="calculate-btn"
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+            >
+              Calcular
+            </button>
+
+            <div id="result-container" class="hidden space-y-2 result-box">
+              <p id="total-amount" class="text-emerald-800 font-medium"></p>
+              <p id="monthly-payment" class="text-emerald-600 text-sm"></p>
+              <p id="recovery-months" class="text-emerald-600 text-sm"></p>
+            </div>
+          </div>
+          
+          <!-- Reverse Calculation -->
+          <div id="reverse-calc-tab" class="calc-tab-content space-y-4 mt-4 hidden">
+            <div class="space-y-2">
+              <label for="loanAmount" class="text-sm font-medium leading-none block">Valor do Empréstimo (R$)</label>
+              <input
+                id="loanAmount"
+                type="number"
+                placeholder="Ex: 5000"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="monthlyPayment" class="text-sm font-medium leading-none block">Valor da Parcela (R$)</label>
+              <input
+                id="monthlyPayment"
+                type="number"
+                placeholder="Ex: 500"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="loanInterest" class="text-sm font-medium leading-none block">Taxa de Juros (% ao mês)</label>
+              <input
+                id="loanInterest"
+                type="number"
+                placeholder="Ex: 1.5"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <button 
+              id="calculate-months-btn"
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+            >
+              Calcular Prazo
+            </button>
+
+            <div id="reverse-result-container" class="hidden space-y-2 result-box">
+              <p id="calculated-months" class="text-emerald-800 font-medium"></p>
+              <p id="total-value" class="text-emerald-600 text-sm"></p>
+              <p id="inverse-recovery-months" class="text-emerald-600 text-sm"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Register Tab -->
+      <div id="register-tab" class="tab-content mt-6 hidden">
+        <form id="loan-form">
+          <div class="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+            <div class="space-y-2">
+              <label for="name" class="text-sm font-medium leading-none block">Nome Completo</label>
+              <input
+                id="name"
+                name="name"
+                placeholder="Digite seu nome completo"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="cpf" class="text-sm font-medium leading-none block">CPF</label>
+              <input
+                id="cpf"
+                name="cpf"
+                placeholder="000.000.000-00"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="email" class="text-sm font-medium leading-none block">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="seu@email.com"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="phone" class="text-sm font-medium leading-none block">Telefone</label>
+              <input
+                id="phone"
+                name="phone"
+                placeholder="(00) 00000-0000"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="register-amount" class="text-sm font-medium leading-none block">Valor do Empréstimo</label>
+              <input
+                id="register-amount"
+                name="amount"
+                type="number"
+                placeholder="Digite o valor"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="register-months" class="text-sm font-medium leading-none block">Prazo (meses)</label>
+              <input
+                id="register-months"
+                name="months"
+                type="number"
+                placeholder="Digite o prazo"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label for="register-interest" class="text-sm font-medium leading-none block">Taxa de Juros (%)</label>
+              <input
+                id="register-interest"
+                name="interestRate"
+                type="number"
+                placeholder="Digite a taxa"
+                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <button 
+              type="submit"
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700 h-10 px-4 py-2 w-full"
+            >
+              Cadastrar Empréstimo
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- List Tab -->
+      <div id="list-tab" class="tab-content mt-6 hidden">
+        <div class="p-4 overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Empréstimos Cadastrados</h2>
+            <button
+              id="export-btn"
+              class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-gray-100 h-10 px-4 py-2 gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Exportar
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b">
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Nome</th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">CPF</th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Valor</th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Prazo (meses)</th>
+                  <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Taxa de Juros</th>
+                </tr>
+              </thead>
+              <tbody id="loans-table-body">
+                <!-- Loan rows will be added here dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="fixed top-4 right-4 bg-white px-4 py-2 rounded-lg shadow-lg transition-opacity duration-300 opacity-0 invisible flex items-center">
+    <div id="toast-icon" class="mr-2 text-green-500">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6L9 17l-5-5"></path>
+      </svg>
+    </div>
+    <span id="toast-message">Mensagem de sucesso</span>
+  </div>
+
+  <script>
+    // Store loans data
+    let loans = [];
+
+    // Show toast notification
+    function showToast(message, success = true) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      
+      toastMessage.textContent = message;
+      
+      if (success) {
+        toastIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>';
+        toastIcon.className = 'mr-2 text-green-500';
+      } else {
+        toastIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+        toastIcon.className = 'mr-2 text-red-500';
+      }
+      
+      toast.classList.remove('invisible', 'opacity-0');
+      toast.classList.add('opacity-100');
+      
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0');
+        setTimeout(() => {
+          toast.classList.add('invisible');
+        }, 300);
+      }, 3000);
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-trigger').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab button
+        document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('tab-active'));
+        tab.classList.add('tab-active');
+        
+        // Show selected tab content
+        const tabId = tab.getAttribute('data-tab');
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+      });
+    });
+
+    // Calculator tab switching
+    document.querySelectorAll('.calc-tab-trigger').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active calculator tab button
+        document.querySelectorAll('.calc-tab-trigger').forEach(t => t.classList.remove('calc-tab-active'));
+        tab.classList.add('calc-tab-active');
+        
+        // Show selected calculator tab content
+        const tabId = tab.getAttribute('data-calc-tab');
+        document.querySelectorAll('.calc-tab-content').forEach(content => content.classList.add('hidden'));
+        document.getElementById(`${tabId}-calc-tab`).classList.remove('hidden');
+      });
+    });
+
+    // Normal calculation
+    document.getElementById('calculate-btn').addEventListener('click', () => {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const months = parseFloat(document.getElementById('months').value);
+      const interestRate = parseFloat(document.getElementById('interest').value);
+      
+      if (!amount || !months || !interestRate) {
+        showToast('Por favor, preencha todos os campos', false);
+        return;
+      }
+      
+      const rate = interestRate / 100;
+      const totalInterest = amount * rate * months;
+      const totalAmount = amount + totalInterest;
+      const monthlyPayment = totalAmount / months;
+      
+      // Calculate recovery months
+      const monthsToRecover = Math.ceil(amount / monthlyPayment);
+      const recoveryMonths = monthsToRecover > months ? months : monthsToRecover;
+      
+      document.getElementById('total-amount').textContent = `Valor Total: R$ ${totalAmount.toFixed(2)}`;
+      document.getElementById('monthly-payment').textContent = `Parcela Mensal: R$ ${monthlyPayment.toFixed(2)}`;
+      document.getElementById('recovery-months').textContent = `Recuperação do Principal: ${recoveryMonths} ${recoveryMonths === 1 ? 'mês' : 'meses'}`;
+      document.getElementById('result-container').classList.remove('hidden');
+      
+      showToast('Cálculo realizado com sucesso!');
+    });
+
+    // Reverse calculation
+    document.getElementById('calculate-months-btn').addEventListener('click', () => {
+      const principal = parseFloat(document.getElementById('loanAmount').value);
+      const payment = parseFloat(document.getElementById('monthlyPayment').value);
+      const rate = parseFloat(document.getElementById('loanInterest').value) / 100;
+      
+      if (!principal || !payment || !rate) {
+        showToast('Por favor, preencha todos os campos', false);
+        return;
+      }
+      
+      const denominator = payment - (principal * rate);
+      
+      if (denominator <= 0) {
+        showToast('O valor da parcela é muito baixo para cobrir os juros mensais', false);
+        return;
+      }
+      
+      const time = principal / denominator;
+      const roundedTime = Math.ceil(time);
+      
+      // Calculate recovery months
+      const monthsToRecover = Math.ceil(principal / payment);
+      const inverseRecoveryMonths = monthsToRecover > roundedTime ? roundedTime : monthsToRecover;
+      
+      document.getElementById('calculated-months').textContent = `Prazo Necessário: ${roundedTime} ${roundedTime === 1 ? 'mês' : 'meses'}`;
+      document.getElementById('total-value').textContent = `Valor Total: R$ ${(payment * roundedTime).toFixed(2)}`;
+      document.getElementById('inverse-recovery-months').textContent = `Recuperação do Principal: ${inverseRecoveryMonths} ${inverseRecoveryMonths === 1 ? 'mês' : 'meses'}`;
+      document.getElementById('reverse-result-container').classList.remove('hidden');
+      
+      showToast('Cálculo realizado com sucesso!');
+    });
+
+    // Form submission
+    document.getElementById('loan-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const cpf = document.getElementById('cpf').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const amount = parseFloat(document.getElementById('register-amount').value);
+      const months = parseFloat(document.getElementById('register-months').value);
+      const interestRate = parseFloat(document.getElementById('register-interest').value);
+      
+      if (!name || !cpf || !email || !amount || !months || !interestRate) {
+        showToast('Por favor, preencha todos os campos obrigatórios', false);
+        return;
+      }
+      
+      const loan = { name, cpf, email, phone, amount, months, interestRate };
+      loans.push(loan);
+      
+      // Update loans table
+      updateLoansTable();
+      
+      // Reset form
+      document.getElementById('loan-form').reset();
+      
+      showToast('Empréstimo cadastrado com sucesso!');
+    });
+
+    // Update loans table
+    function updateLoansTable() {
+      const tableBody = document.getElementById('loans-table-body');
+      tableBody.innerHTML = '';
+      
+      loans.forEach(loan => {
+        const row = document.createElement('tr');
+        row.className = 'border-b';
+        
+        row.innerHTML = `
+          <td class="p-4 align-middle">${loan.name}</td>
+          <td class="p-4 align-middle">${loan.cpf}</td>
+          <td class="p-4 align-middle">${loan.email}</td>
+          <td class="p-4 align-middle">R$ ${loan.amount}</td>
+          <td class="p-4 align-middle">${loan.months}</td>
+          <td class="p-4 align-middle">${loan.interestRate}%</td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Export to CSV
+    document.getElementById('export-btn').addEventListener('click', () => {
+      if (loans.length === 0) {
+        showToast('Não há empréstimos para exportar', false);
+        return;
+      }
+      
+      const headers = ['Nome,CPF,Email,Telefone,Valor,Prazo,Taxa de Juros\n'];
+      const csvContent = loans.map(loan => 
+        `${loan.name},${loan.cpf},${loan.email},${loan.phone},${loan.amount},${loan.months},${loan.interestRate}`
+      ).join('\n');
+      
+      const blob = new Blob([headers + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'emprestimos.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast('Arquivo exportado com sucesso!');
+    });
+  </script>
+</body>
 </html>
