@@ -67,6 +67,9 @@ const InverseCalculatorForm: React.FC<InverseCalculatorFormProps> = ({
       monthlyPayment: payment
     });
     
+    // Mostrar relatório automaticamente
+    setShowReport(true);
+    
     toast.success('Cálculo realizado com sucesso!');
   };
 
@@ -126,13 +129,6 @@ const InverseCalculatorForm: React.FC<InverseCalculatorFormProps> = ({
           <p className="text-emerald-600 text-sm">
             Recuperação do Principal: {inverseRecoveryMonths} {inverseRecoveryMonths === 1 ? 'mês' : 'meses'}
           </p>
-          <Button 
-            variant="outline" 
-            className="w-full mt-2 text-emerald-600 border-emerald-600"
-            onClick={() => setShowReport(true)}
-          >
-            Gerar Relatório de Parcelas
-          </Button>
         </div>
       )}
     </div>

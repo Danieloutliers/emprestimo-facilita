@@ -22,7 +22,7 @@ const LoanCalculator = () => {
   const [activeTab, setActiveTab] = useState("normal");
 
   return (
-    <>
+    <div className="space-y-6">
       <Card className="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200">
         <Tabs 
           defaultValue="normal" 
@@ -73,7 +73,7 @@ const LoanCalculator = () => {
           onClose={() => setShowInverseReport(false)}
         />
       )}
-    </>
+    </div>
   );
 };
 

@@ -55,6 +55,9 @@ const NormalCalculatorForm: React.FC<NormalCalculatorFormProps> = ({
       monthlyPayment: payment
     });
     
+    // Mostrar relatório automaticamente
+    setShowReport(true);
+    
     toast.success('Cálculo realizado com sucesso!');
   };
 
@@ -114,13 +117,6 @@ const NormalCalculatorForm: React.FC<NormalCalculatorFormProps> = ({
           <p className="text-emerald-600 text-sm">
             Recuperação do Principal: {recoveryMonths} {recoveryMonths === 1 ? 'mês' : 'meses'}
           </p>
-          <Button 
-            variant="outline" 
-            className="w-full mt-2 text-emerald-600 border-emerald-600"
-            onClick={() => setShowReport(true)}
-          >
-            Gerar Relatório de Parcelas
-          </Button>
         </div>
       )}
     </div>
