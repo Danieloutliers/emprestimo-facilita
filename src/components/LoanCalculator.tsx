@@ -19,11 +19,16 @@ const LoanCalculator = () => {
   const [showInverseReport, setShowInverseReport] = useState(false);
   const [normalReportData, setNormalReportData] = useState<ReportData | null>(null);
   const [inverseReportData, setInverseReportData] = useState<ReportData | null>(null);
+  const [activeTab, setActiveTab] = useState("normal");
 
   return (
     <>
       <Card className="p-6 space-y-4 max-w-md mx-auto bg-white/80 backdrop-blur-sm border border-gray-200">
-        <Tabs defaultValue="normal" className="w-full">
+        <Tabs 
+          defaultValue="normal" 
+          className="w-full"
+          onValueChange={(value) => setActiveTab(value)}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="normal">Calcular Valor</TabsTrigger>
             <TabsTrigger value="reverse">Calcular Prazo</TabsTrigger>
@@ -45,7 +50,7 @@ const LoanCalculator = () => {
         </Tabs>
       </Card>
 
-      {showReport && normalReportData && (
+      {showReport && normalReportData && activeTab === "normal" && (
         <LoanReport
           amount={normalReportData.amount}
           months={normalReportData.months}
@@ -57,7 +62,7 @@ const LoanCalculator = () => {
         />
       )}
 
-      {showInverseReport && inverseReportData && (
+      {showInverseReport && inverseReportData && activeTab === "reverse" && (
         <LoanReport
           amount={inverseReportData.amount}
           months={inverseReportData.months}
